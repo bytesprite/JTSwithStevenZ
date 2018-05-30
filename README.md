@@ -1,3 +1,0 @@
-# JTSwithStevenZ
-# JTSwithStevenZ
-# JTSwithStevenZ
