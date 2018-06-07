@@ -27,12 +27,6 @@ public class BidServiceImpl implements  BidService{
 
         allBids.forEach(bid -> {if(bid.getAuction().getId().equals(auctionId)) matchingAuctionBids.add(bid);});
 
-//        for (Bid bid: allBids ) {
-//            if(bid.getAuction().getId().equals(auctionId)){
-//                matchingAuctionBids.add(bid);
-//            }
-//        }
-
         return matchingAuctionBids;
     }
 
@@ -44,11 +38,6 @@ public class BidServiceImpl implements  BidService{
 
         allBids.forEach(bid -> {if(bid.getAuction().getId().equals(auctionId)) matchingAuctionBids.add(bid);});
 
-//        for (Bid bid: allBids ) {
-//            if(bid.getAuction().getId().equals(auctionId)){
-//                matchingAuctionBids.add(bid);
-//            }
-//        }
         return matchingAuctionBids;
     }
 

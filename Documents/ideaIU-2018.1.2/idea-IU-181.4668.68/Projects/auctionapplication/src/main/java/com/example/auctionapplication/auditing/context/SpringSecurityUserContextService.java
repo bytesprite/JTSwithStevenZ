@@ -44,12 +44,16 @@ public class SpringSecurityUserContextService implements UserContextService {
 
     @Override
     public String getCurrentUsername() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if( username == null ){
+        if(SecurityContextHolder.getContext().getAuthentication()==null){
             throw new UnauthenticatedException();
-        }else{
-            return username;
+        }
+        else{
+            String username = SecurityContextHolder.getContext().getAuthentication().getName();
+            if( username == null ){
+                throw new UnauthenticatedException();
+            }else{
+                return username;
+            }
         }
     }
-
 }

@@ -32,4 +32,6 @@ public class Bid extends AbstractEntity {
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.MERGE)
     private Auction auction;
+
+
 }

@@ -2,17 +2,19 @@ package com.example.auctionapplication.domain.auction;
 
 import com.example.auctionapplication.domain.AbstractEntity;
 import com.example.auctionapplication.domain.auction.bid.Bid;
+import com.example.auctionapplication.domain.auction.bid.BidComparator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.SortComparator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 @Entity
@@ -31,9 +33,14 @@ public class Auction extends AbstractEntity {
 //    @NotNull(message = "{NotNull.Auction.description}")
     private String description;
 
+    private Boolean isOpen;
+
+    private LocalDateTime creationDate;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Bid> bids = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "auction", cascade = CascadeType.ALL, orphanRemoval = true)
+    @SortComparator(BidComparator.class)
+    private SortedSet<Bid> bids = new TreeSet<>();
 
     public Auction addBid(Bid bid){
 
@@ -46,13 +53,16 @@ public class Auction extends AbstractEntity {
         return this;
     }
 
-
     public Optional<Bid> getBidById(Long bidId){
         return bidId == null ? Optional.empty() : bids.stream().filter(bid -> bid.getId().equals(bidId)).findFirst();
     }
 
     public Optional<Bid> getBidByUsername(String username){
         return username == null ? Optional.empty() : bids.stream().filter(bid -> bid.getCreatedBy().equals(username)).findFirst();
+    }
+
+    public Optional<Bid> getHighestBid(){
+        return bids.isEmpty() ? Optional.empty() : Optional.of(bids.first());
     }
 
     public Auction removeBid(Bid bid){
@@ -62,3 +72,10 @@ public class Auction extends AbstractEntity {
         return this;
     }
 }
+
+
+//Add in CronBatchListener - when (Current Date Time - Auction.CreateTimestamp > X, do something)
+    //Do Something: If Auction.Bids == null, fire AuctionExpiredEvent(Listener Deletes the Auction)
+    //Do Something: If Auction.Bids != null, fire AuctionCompletedEvent
+
+//Connect that 'Do Something' to another 'Order Application'
