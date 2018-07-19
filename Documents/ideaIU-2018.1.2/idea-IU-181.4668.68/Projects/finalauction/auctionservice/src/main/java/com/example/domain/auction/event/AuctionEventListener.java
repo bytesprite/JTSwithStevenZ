@@ -1,9 +1,9 @@
-package com.example.auctionapplication.domain.auction.event;
+package com.example.domain.auction.event;
 
-import com.example.auctionapplication.domain.auction.Auction;
-import com.example.auctionapplication.domain.auction.AuctionRepository;
-import com.example.auctionapplication.domain.auction.bid.Bid;
-import com.example.auctionapplication.domain.auction.rabbitmq.Sender;
+import com.example.domain.auction.Auction;
+import com.example.domain.auction.AuctionRepository;
+import com.example.domain.auction.bid.Bid;
+import com.example.domain.auction.rabbitmq.Sender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,9 @@ import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeoutException;
 
 @Component
 public class AuctionEventListener {
@@ -35,7 +37,7 @@ public class AuctionEventListener {
     }
 
     @EventListener
-    public void onAuctionConcludedEvent(AuctionConcludedEvent event) throws JSONException {
+    public void onAuctionConcludedEvent(AuctionConcludedEvent event) throws JSONException, IOException, TimeoutException {
         Bid winningBid = event.getSource();
         Auction concludedAuction = winningBid.getAuction();
         logger.info("BidID:'{}' for AuctionID:'{}' won. Sending to OrderProcessing & Closing Auction.", winningBid.getId(), concludedAuction.getId());

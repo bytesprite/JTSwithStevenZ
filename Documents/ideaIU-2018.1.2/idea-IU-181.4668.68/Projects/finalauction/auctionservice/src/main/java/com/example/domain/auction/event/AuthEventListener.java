@@ -1,8 +1,8 @@
-package com.example.auctionapplication.domain.auction.event;
+package com.example.domain.auction.event;
 
 
-import com.example.auctionapplication.domain.auction.user.User;
-import com.example.auctionapplication.domain.auction.user.UserRepository;
+import com.example.domain.auction.user.User;
+import com.example.domain.auction.user.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
