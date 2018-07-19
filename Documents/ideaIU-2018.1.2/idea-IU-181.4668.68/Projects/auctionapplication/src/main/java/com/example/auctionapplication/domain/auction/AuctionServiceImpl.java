@@ -57,4 +57,3 @@ public class AuctionServiceImpl implements AuctionService{
 
 }
 
-// http -v POST localhost:8080/auctions name="james'Auction" id="5"

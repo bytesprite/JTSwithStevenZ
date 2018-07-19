@@ -1,5 +1,6 @@
 package com.example.auctionapplication.domain.auction.security;
 
+import com.example.auctionapplication.domain.auction.event.AuthFailureCredentialsEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,9 +9,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -43,7 +46,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().httpBasic().authenticationEntryPoint(authenticationEntryPoint())
                 .and().headers().frameOptions().disable()
                 .and().csrf().disable();
+
     }
+
+
+//    @Bean
+//    public UserAccountLockFilter userAccountLockFilter() {
+//        return new UserAccountLockFilter();
+//    }
 
     @Bean
     PasswordEncoder encoder(){

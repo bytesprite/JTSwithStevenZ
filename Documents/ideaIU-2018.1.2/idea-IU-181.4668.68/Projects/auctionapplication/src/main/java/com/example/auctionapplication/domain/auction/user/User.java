@@ -2,26 +2,25 @@ package com.example.auctionapplication.domain.auction.user;
 
 import com.example.auctionapplication.domain.AbstractEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+//@EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 public class User extends AbstractEntity {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
 
     private String password;
 
-    private Integer loginAttempts;
+    private Integer loginattempts;
 
-    private Boolean accountLocked;
+    private Boolean accountlocked;
 }
 
 

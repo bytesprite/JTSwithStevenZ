@@ -125,8 +125,7 @@ public class AuctionControllerTests{
 
     @Test
     @WithMockUser
-    public void testFindByID() throws Exception{
-
+    public void testFindByID() throws Exception {
         Auction auction = new Auction();
 
         auction.setName("test");

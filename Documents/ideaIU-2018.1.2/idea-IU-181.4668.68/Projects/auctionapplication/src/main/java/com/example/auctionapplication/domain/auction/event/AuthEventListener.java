@@ -7,11 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-//@Lazy(false)
 @Component
 public class AuthEventListener {
 
@@ -22,24 +22,37 @@ public class AuthEventListener {
 
 
     @EventListener
-    public void onAuthFailureCredentialsEvent(AuthFailureCredentialsEvent event){
-        Optional<User> userOptional =  userRepository.findByUsername(event.getSource().getUserPrincipal().getName());
+    public void onAuthFailureCredentialsEvent(AuthenticationFailureBadCredentialsEvent event){
+
+        Optional<User> userOptional =  userRepository.findByUsername(event.getAuthentication().getPrincipal().toString());
         User user;
 
-        logger.info("test");
 
         if(userOptional.isPresent()){
-            user = userOptional.get();
-            Integer loginAttempts = user.getLoginAttempts() + 1;
+            user = userRepository.findByUsername(userOptional.get().getUsername()).get();
+            Integer loginAttempts = user.getLoginattempts() + 1;
 
             if(loginAttempts <= 3){
-                user.setLoginAttempts(loginAttempts + 1);
-                logger.info("Authentication Failure in Credentials for Username {}. Number of Failed Attempts = {}", user.getUsername(), loginAttempts);
+                user.setLoginattempts(loginAttempts);
+                logger.error("Authentication Failure in Credentials for User '{}'. Number of Failed Attempts = {}", user.getUsername(), loginAttempts);
             }
             else{
-                user.setAccountLocked(true);
-                logger.info("Authentication Failure in Credentials for Username {}. User Account Now Locked", user.getUsername());
+                user.setAccountlocked(true);
+                logger.error("Authentication Failure in Credentials for User '{}'. User Account Now Locked", user.getUsername());
             }
+
+            userRepository.save(user);
         }
+    }
+
+    //Need to somehow bypass the AuditConfig.
+
+    @EventListener
+    public void onAuthUserAccountLockedEvent(AuthUserAccountLockedEvent event){
+
+        String username = event.getSource().getUsername();
+
+        logger.error("Authentication Failure for User '{}'. User Account Is Already Locked!", username);
+
     }
 }

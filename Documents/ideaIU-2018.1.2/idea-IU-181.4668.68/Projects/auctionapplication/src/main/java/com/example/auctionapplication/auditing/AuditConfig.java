@@ -4,6 +4,7 @@ import com.example.auctionapplication.auditing.context.CurrentDateTimeService;
 import com.example.auctionapplication.auditing.context.DateTimeService;
 import com.example.auctionapplication.auditing.context.SpringSecurityUserContextService;
 import com.example.auctionapplication.auditing.context.UserContextService;
+import com.example.auctionapplication.domain.auction.security.UnauthenticatedException;
 import com.example.auctionapplication.domain.auction.user.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,13 @@ public class AuditConfig {
 
     @Bean
     AuditorAware<String> userContextProvider(UserContextService userContextService){
-        return () -> Optional.of(userContextService.getCurrentUsername());
+        return () -> {
+            try{
+                return Optional.of(userContextService.getCurrentUsername());
+            }
+            catch(UnauthenticatedException e){
+                return Optional.of("System");
+            }
+        };
     }
 }
